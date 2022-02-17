@@ -21,7 +21,7 @@ public class GoodGameEngineImpl implements GoodGameEngine {
             Random random = new Random();
 
             int n1 = random.nextInt(num - 2) + 1;
-            int n2 = random.nextInt(num - n1 - 1);
+            int n2 = random.nextInt(num - n1 - 1) + 1;
             int n3 = num - n1 - n2;
 
             army.setArchers(n1);
@@ -30,7 +30,7 @@ public class GoodGameEngineImpl implements GoodGameEngine {
 
             return army;
         } catch (Exception ex) {
-            log.error("error message : ", ex);
+            log.error("exception message : ", ex);
             throw new Exception(ex);
         }
     }
@@ -85,7 +85,7 @@ public class GoodGameEngineImpl implements GoodGameEngine {
             return army;
 
         } catch (Exception ex) {
-            log.error("Exception message : ", ex);
+            log.error("exception message : ", ex);
             throw new Exception(ex);
         }
     }
