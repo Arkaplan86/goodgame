@@ -13,14 +13,14 @@ import java.util.Random;
 @Service
 public class GoodGameEngineImpl implements GoodGameEngine {
 
-
+    @SneakyThrows
     @Override
     public Army startGame(int num) {
         try {
             Army army = new Army();
             Random random = new Random();
 
-            int n1 = random.nextInt(num - 2);
+            int n1 = random.nextInt(num - 2) + 1;
             int n2 = random.nextInt(num - n1 - 1);
             int n3 = num - n1 - n2;
 
@@ -29,9 +29,9 @@ public class GoodGameEngineImpl implements GoodGameEngine {
             army.setSwordsMan(n3);
 
             return army;
-        } catch (Exception e) {
-            log.error("error message : {}", e.getMessage(), e);
-            return null;
+        } catch (Exception ex) {
+            log.error("error message : ", ex);
+            throw new Exception(ex);
         }
     }
 
@@ -48,20 +48,17 @@ public class GoodGameEngineImpl implements GoodGameEngine {
             int remainingTroopSize = troopFields.length;
             int sum = 0;
 
-            if (remainingTroopNumber - remainingTroopSize == 0) {
-                for (int i = 0; i < troopFields.length; i++) {
-                    Field field = troopFields[i];
+            /**
+             * if input number equals troop numbers, so every troop should be 1 and
+             */
+            if (remainingTroopNumber - remainingTroopSize == 0 || remainingTroopNumber - remainingTroopSize == 1) {
+                for (Field field : troopFields) {
                     field.setAccessible(true);
                     field.set(army, 1);
                 }
             }
 
             if (remainingTroopNumber - remainingTroopSize == 1) {
-                for (int i = 0; i < troopFields.length; i++) {
-                    Field field = troopFields[i];
-                    field.setAccessible(true);
-                    field.set(army, 1);
-                }
                 int result = random.nextInt(troopFields.length);
                 Field field = troopFields[result];
                 field.setAccessible(true);
@@ -69,12 +66,12 @@ public class GoodGameEngineImpl implements GoodGameEngine {
             }
 
             if (remainingTroopNumber - remainingTroopSize > 1) {
-                for (int i = 0; i < troopFields.length - 1; i++) {
+                for (int index = 0; index < troopFields.length - 1; index++) {
                     int result = random.nextInt(remainingTroopNumber - remainingTroopSize) + 1;
                     remainingTroopNumber = remainingTroopNumber - result;
                     remainingTroopSize = remainingTroopSize - 1;
                     sum = sum + result;
-                    Field field = troopFields[i];
+                    Field field = troopFields[index];
                     field.setAccessible(true);
                     field.set(army, result);
                 }
@@ -86,9 +83,10 @@ public class GoodGameEngineImpl implements GoodGameEngine {
             }
 
             return army;
-        } catch (Exception e) {
-            log.error("Exception message {}", e.getMessage(), e);
-            return null;
+
+        } catch (Exception ex) {
+            log.error("Exception message : ", ex);
+            throw new Exception(ex);
         }
     }
 }
